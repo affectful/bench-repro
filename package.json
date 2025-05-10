@@ -45,11 +45,12 @@
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.10.0",
-    "react-native-unistyles": "3.0.0-rc.3",
+    "react-native-unistyles": "3.0.0-nightly-20250508",
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
     "serve": "^14.2.4",
-    "tamagui": "^1.126.9"
+    "tamagui": "^1.126.9",
+    "@tamagui/config": "^1.126.9"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
