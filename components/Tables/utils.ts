@@ -27,3 +27,10 @@ export const eduColumns: (keyof EducationCost)[] = [
   'Insurance_USD',
   'Exchange_Rate',
 ]
+
+export const costColumns: Set<(keyof EducationCost)> = new Set([
+  'Tuition_USD',
+  'Rent_USD',
+  'Visa_Fee_USD',
+  'Insurance_USD',
+])

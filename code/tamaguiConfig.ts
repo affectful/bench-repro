@@ -3,6 +3,7 @@ import { createTamagui } from 'tamagui'
 
 export const config = createTamagui(defaultConfig)
 
+
 type CustomConfig = typeof config
 
 // ensure types work

@@ -7,20 +7,22 @@ import {
 import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { StyleSheet } from 'react-native-unistyles'
-import dataset from './education_costs.json'
-import { EducationCost, eduColumns } from './utils'
+import { costColumns, EducationCost, eduColumns } from './utils'
 
 const columnHelper = createColumnHelper<EducationCost>()
 
 const columns = eduColumns.map((col) =>
   columnHelper.accessor(col, {
-    header: () => <Text>{col}</Text>,
-    cell: (info) => <Text>{info.renderValue()}</Text>,
-    footer: (info) => <Text>{info.column.id}</Text>,
+    header: () => <Text style={styles.cellValue}>{col}</Text>,
+    cell: (info) => {
+      styles.useVariants({ valueType: costColumns.has(col) ? 'cost' : undefined })
+      return (<Text style={styles.cellValue}>{info.renderValue()}</Text>)
+    },
+    footer: (info) => <Text style={styles.cellValue}>{info.column.id}</Text>,
   })
 )
 
-export function TableUnistyles() {
+export function TableUnistyles({ dataset }: { dataset: EducationCost[] }) {
   const [data, _setData] = useState(dataset)
 
   const table = useReactTable({
@@ -69,20 +71,20 @@ export function TableUnistyles() {
   )
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create(theme => ({
   table: {
-    borderRadius: 6,
+    borderRadius: theme.radii.$2_5,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: theme.colors.border,
   },
   row: {
     display: 'flex',
     flexDirection: 'row',
-    padding: 16,
+    padding: theme.space.rowPadding,
     variants: {
       color: {
         gray: {
-          backgroundColor: '#eee',
+          backgroundColor: theme.colors.grayBg,
         },
       },
     },
@@ -91,9 +93,16 @@ const styles = StyleSheet.create({
     flex: 1,
     flexBasis: 0,
   },
-  header: {
-    textTransform: 'uppercase',
-    fontWeight: 500,
-    fontSize: 10,
+  cellValue: {
+    variants: {
+      valueType: {
+        default: {
+          color: 'black',
+        },
+        cost: {
+          color: theme.colors.green,
+        }
+      }
+    }
   },
-})
+}))

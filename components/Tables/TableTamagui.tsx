@@ -5,21 +5,20 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useState } from 'react'
-import { styled, View, Text } from 'tamagui'
-import { eduColumns, EducationCost } from './utils'
-import dataset from './education_costs.json'
+import { styled, Text, View } from 'tamagui'
+import { costColumns, EducationCost, eduColumns } from './utils'
 
 const columnHelper = createColumnHelper<EducationCost>()
 
 const columns = eduColumns.map((col) =>
   columnHelper.accessor(col, {
-    header: () => <Text>{col}</Text>,
-    cell: (info) => <Text>{info.renderValue()}</Text>,
-    footer: (info) => <Text>{info.column.id}</Text>,
+    header: () => <CellValue>{col}</CellValue>,
+    cell: (info) => <CellValue valueType={costColumns.has(col) ? 'cost' : 'normal'}>{info.renderValue()}</CellValue>,
+    footer: (info) => <CellValue>{info.column.id}</CellValue>,
   })
 )
 
-export function TableTamagui() {
+export function TableTamagui({ dataset }: { dataset: EducationCost[] }) {
   const [data, _setData] = useState(dataset)
 
   const table = useReactTable({
@@ -49,7 +48,7 @@ export function TableTamagui() {
       <View>
         {table.getRowModel().rows.map((row, idx) => {
           return (
-            <Row key={row.id} gray={idx % 2 === 0}>
+            <Row key={row.id} gray={idx % 2 === 1}>
               {row.getVisibleCells().map((cell) => (
                 <Cell key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -65,20 +64,21 @@ export function TableTamagui() {
 
 const Table = styled(View, {
   name: 'Table',
-  borderRadius: 6,
+  rounded: '$2',
   borderWidth: 1,
+  borderColor: '$borderColor',
 })
 
 const Row = styled(View, {
   name: 'Row',
   display: 'flex',
   flexDirection: 'row',
-  padding: 16,
+  p: '$2',
 
   variants: {
     gray: {
       true: {
-        backgroundColor: '#eee',
+        backgroundColor: '$backgroundPress',
       },
     },
   } as const,
@@ -88,4 +88,18 @@ const Cell = styled(View, {
   name: 'Cell',
   flex: 1,
   flexBasis: 0,
+})
+
+const CellValue = styled(Text, {
+  name: 'CellValue',
+  variants: {
+    valueType: {
+      normal: {
+        color: 'black',
+      },
+      cost: {
+        color: '$green10',
+      },
+    },
+  } as const,
 })

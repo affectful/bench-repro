@@ -7,21 +7,23 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useState } from 'react'
-import { View, Text } from 'react-native'
-import { eduColumns, EducationCost } from './utils'
-import dataset from './education_costs.json'
+import { View } from 'react-native'
+import { costColumns, EducationCost, eduColumns } from './utils'
 
 const columnHelper = createColumnHelper<EducationCost>()
 
 const columns = eduColumns.map((col) =>
   columnHelper.accessor(col, {
-    header: () => <Text>{col}</Text>,
-    cell: (info) => <Text>{info.renderValue()}</Text>,
-    footer: (info) => <Text>{info.column.id}</Text>,
+    header: () => <CellValue>{col}</CellValue>,
+    cell: (info) => {
+      const variant = costColumns.has(col) ? 'cost' : undefined
+      return <CellValue valueType={variant}>{info.renderValue()}</CellValue>
+    },
+    footer: (info) => <CellValue>{info.column.id}</CellValue>,
   })
 )
 
-export function TableEmotion() {
+export function TableEmotion({ dataset }: { dataset: EducationCost[] }) {
   const [data, _setData] = useState(dataset)
 
   const table = useReactTable({
@@ -51,7 +53,7 @@ export function TableEmotion() {
       <View>
         {table.getRowModel().rows.map((row, idx) => {
           return (
-            <Row key={row.id} gray={idx % 2 === 0}>
+            <Row key={row.id} gray={idx % 2 === 1}>
               {row.getVisibleCells().map((cell) => (
                 <Cell key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -65,17 +67,20 @@ export function TableEmotion() {
   )
 }
 
-const Table = styled.View({
-  borderRadius: 6,
-  borderWidth: 1,
-})
+const Table = styled.View`
+  borderRadius: ${({ theme }) => String(theme.radii.$2_5)}px;
+  borderWidth: 1px;
+  overflow: hidden;
+  border-color: ${({ theme }) => theme.colors.border};
+`
 Table.displayName = 'Table'
 
 const Row = styled.View<{ gray: boolean }>`
   display: flex;
   flex-direction: row;
-  padding: 16px;
-  background-color: ${(props) => (props.gray ? '#eee' : 'unset')};
+  padding: ${({ theme }) => `${theme.space.rowPadding}px`};
+  
+  background-color: ${(props) => (props.gray ? props.theme.colors.grayBg : 'unset')};
 `
 Row.displayName = 'Row'
 
@@ -83,4 +88,14 @@ const Cell = styled.View({
   flex: 1,
   flexBasis: 0,
 })
+
+const CellValue = styled.Text<{
+  valueType?: 'cost'
+}>`
+  ${props => props.valueType === 'cost' ?
+    `color: ${props.theme.colors.green};`
+    : `color: black;`
+  }
+`
+
 Cell.displayName = 'Cell'

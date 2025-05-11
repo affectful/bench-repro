@@ -1,2 +1,3 @@
 import 'expo-router/entry'
-import './unistyles' // <-- file that initializes Unistyles
+import './code/unistyles'; // <-- file that initializes Unistyles
+

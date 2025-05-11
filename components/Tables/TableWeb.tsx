@@ -5,8 +5,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useState } from 'react'
-import { eduColumns, EducationCost } from './utils'
-import dataset from './education_costs.json'
+import { EducationCost, eduColumns } from './utils'
 
 const columnHelper = createColumnHelper<EducationCost>()
 
@@ -18,7 +17,7 @@ const columns = eduColumns.map((col) =>
   })
 )
 
-export function TableWeb() {
+export function TableWeb({ dataset }: { dataset: EducationCost[] }) {
   const [data, _setData] = useState(dataset)
 
   const table = useReactTable({

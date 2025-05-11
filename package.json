@@ -3,10 +3,11 @@
   "main": "index.ts",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --no-dev",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
-    "ios": "expo run:ios",
+    "android:release": "expo run:android --variant release",
+    "ios": "expo run:ios --configuration Release",
     "web": "expo start --web",
     "build-web": "expo export -p web",
     "serve": "serve dist",
@@ -19,9 +20,11 @@
     "@emotion/native": "^11.11.0",
     "@emotion/react": "^11.14.0",
     "@expo/vector-icons": "^14.1.0",
+    "@react-native-clipboard/clipboard": "^1.16.2",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
+    "@tamagui/config": "^1.126.9",
     "@tanstack/react-table": "^8.21.3",
     "expo": "~53.0.9",
     "expo-blur": "~14.1.4",
@@ -50,7 +53,7 @@
     "react-native-webview": "13.13.5",
     "serve": "^14.2.4",
     "tamagui": "^1.126.9",
-    "@tamagui/config": "^1.126.9"
+    "ua-parser-js": "^2.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

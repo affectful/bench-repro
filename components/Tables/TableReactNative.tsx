@@ -1,3 +1,4 @@
+import { lightTheme, Theme } from '@/code/objectTheme'
 import {
   createColumnHelper,
   flexRender,
@@ -5,26 +6,26 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useState } from 'react'
-import { StyleSheet, View, Text } from 'react-native'
-import { eduColumns, EducationCost } from './utils'
-import dataset from './education_costs.json'
+import { StyleSheet, Text, View } from 'react-native'
+import { costColumns, EducationCost, eduColumns } from './utils'
 
 const columnHelper = createColumnHelper<EducationCost>()
 
-const columns = eduColumns.map((col) =>
+const columns = (styles: ReturnType<typeof useStyles>) => eduColumns.map((col) =>
   columnHelper.accessor(col, {
-    header: () => <Text>{col}</Text>,
-    cell: (info) => <Text>{info.renderValue()}</Text>,
-    footer: (info) => <Text>{info.column.id}</Text>,
+    header: () => <Text style={styles.cellValue}>{col}</Text>,
+    cell: (info) => <Text style={costColumns.has(col) ? styles.cellValueCost : styles.cellValue}>{info.renderValue()}</Text>,
+    footer: (info) => <Text style={styles.cellValue}>{info.column.id}</Text>,
   })
 )
 
-export function TableReactNative() {
+export function TableReactNative({ dataset }: { dataset: EducationCost[] }) {
   const [data, _setData] = useState(dataset)
+  const styles = useStyles(lightTheme)
 
   const table = useReactTable({
     data,
-    columns,
+    columns: columns(styles),
     getCoreRowModel: getCoreRowModel(),
   })
 
@@ -64,23 +65,29 @@ export function TableReactNative() {
   )
 }
 
-const styles = StyleSheet.create({
+const useStyles = (theme: Theme) => StyleSheet.create({
   table: {
-    borderRadius: 6,
+    borderRadius: theme.radii.$2_5,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: theme.colors.border,
   },
   row: {
     display: 'flex',
     flexDirection: 'row',
-    padding: 16,
+    padding: theme.space.rowPadding,
   },
   grayRow: {
-    backgroundColor: '#eee',
+    backgroundColor: theme.colors.grayBg,
   },
   cell: {
     flex: 1,
     flexBasis: 0,
+  },
+  cellValue: {
+    color: 'black',
+  },
+  cellValueCost: {
+    color: theme.colors.green,
   },
   header: {
     textTransform: 'uppercase',
