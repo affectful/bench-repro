@@ -19,6 +19,7 @@ import { TableNativeWind } from './TableNativeWind'
 import { TableReactNative } from './TableReactNative'
 import { TableStyledComponents } from './TableStyledComponents'
 import { TableTamagui } from './TableTamagui'
+import { TableTwrnc } from './TableTwrnc'
 import { TableUnistyles } from './TableUnistyles'
 import { TableWeb } from './TableWeb'
 import { eduColumns } from './utils'
@@ -43,6 +44,7 @@ const nativeTableVariants = {
   emotion: TableEmotion,
   'styled-components': TableStyledComponents,
   nativewind: TableNativeWind,
+  twrnc: TableTwrnc,
 }
 
 const webTableVariants = {
