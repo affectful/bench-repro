@@ -5,6 +5,8 @@
 const { getDefaultConfig } = require('expo/metro-config');
 const { watch } = require('fs');
 const path = require('path');
+const { withNativeWind } = require('nativewind/metro')
+const { withTamagui } = require('@tamagui/metro-plugin')
 
 const env = process.env.BABEL_ENV || process.env.NODE_ENV;
 const projectRoot = __dirname;
@@ -17,28 +19,18 @@ const config = getDefaultConfig(projectRoot, {
   isCSSEnabled: true,
 })
 
-const { withTamagui } = require('@tamagui/metro-plugin')
-module.exports = withTamagui(config, {
+console.log('bundler paths', {
+  modulePaths: config.resolver.nodeModulesPaths,
+  watchFolders: config.watchFolders,
+})
+
+const tamaguiConfig = withTamagui(config, {
   components: ['tamagui'],
   config: './code/tamaguiConfig.ts',
   outputCSS: './tamagui-web.css',
 })
 
-
-const ALIASES = {
-  'react-dom/client': 'react-dom/profiling',
-};
-
-config.resolver.resolveRequest = (context, moduleName, platform) => {
-  // Ensure you call the default resolver.
-  return context.resolveRequest(
-    context,
-    // Use an alias if one exists.
-    ALIASES[moduleName] ?? moduleName,
-    platform
-  );
-};
-
+const finalConfig = withNativeWind(tamaguiConfig, { input: './code/global.css' })
 
 // 1. Watch all files within the monorepo
 // config.watchFolders = [
@@ -46,14 +38,10 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
 //   // path.resolve(projectRoot, 'node_modules', '@loti', 'ui')
 // ];
 
-console.log('bundler paths', {
-  modulePaths: config.resolver.nodeModulesPaths,
-  watchFolders: config.watchFolders,
-})
 // 2. Let Metro know where to resolve packages and in what order
 // config.resolver.nodeModulesPaths = [
 //   path.resolve(projectRoot, 'node_modules'),
 //   path.resolve(monorepoRoot, 'node_modules'),
 // ];
 
-module.exports = config
+module.exports = finalConfig

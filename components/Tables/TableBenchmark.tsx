@@ -1,3 +1,6 @@
+import '@/code/global.css'
+
+
 import { config } from '@/code/tamaguiConfig'
 import { ThemeProvider } from '@emotion/react'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
@@ -12,6 +15,7 @@ import { UAParser } from 'ua-parser-js'
 import ManualProfiler from '../ManualProfiler'
 import dataset from './education_costs.json'
 import { TableEmotion } from './TableEmotion'
+import { TableNativeWind } from './TableNativeWind'
 import { TableReactNative } from './TableReactNative'
 import { TableStyledComponents } from './TableStyledComponents'
 import { TableTamagui } from './TableTamagui'
@@ -38,6 +42,7 @@ const nativeTableVariants = {
   unistyles: TableUnistyles,
   emotion: TableEmotion,
   'styled-components': TableStyledComponents,
+  nativewind: TableNativeWind,
 }
 
 const webTableVariants = {
