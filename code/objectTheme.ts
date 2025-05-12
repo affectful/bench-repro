@@ -24,3 +24,7 @@ export type BaseTheme = typeof lightTheme
 declare module '@emotion/react' {
   export interface Theme extends BaseTheme {}
 }
+
+declare module 'styled-components/native' {
+  export interface DefaultTheme extends BaseTheme {}
+}
