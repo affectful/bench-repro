@@ -1,4 +1,4 @@
-import styled from 'styled-components/native'
+import styled from 'rn-css'
 
 import {
   createColumnHelper,
@@ -23,7 +23,7 @@ const columns = eduColumns.map((col) =>
   })
 )
 
-export function TableStyledComponents({ dataset }: { dataset: EducationCost[] }) {
+export function TableRnCss({ dataset }: { dataset: EducationCost[] }) {
   const [data, _setData] = useState(dataset)
 
   const table = useReactTable({
@@ -84,10 +84,10 @@ const Row = styled.View<{ gray: boolean }>`
 `
 Row.displayName = 'Row'
 
-const Cell = styled.View({
-  flex: 1,
-  flexBasis: 0,
-})
+const Cell = styled.View`
+  flex: 1;
+  flex-basis: 0;
+`
 
 const CellValue = styled.Text<{
   valueType?: 'cost'

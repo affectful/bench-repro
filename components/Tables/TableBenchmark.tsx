@@ -2,6 +2,8 @@ import { config } from '@/code/tamaguiConfig'
 import { ThemeProvider } from '@emotion/react'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Button, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { SharedValue } from 'rn-css'
+import { ThemeProvider as StyledProviderWeb } from 'styled-components'
 import { ThemeProvider as StyledProvider } from 'styled-components/native'
 import { TamaguiProvider } from 'tamagui'
 
@@ -11,12 +13,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { UAParser } from 'ua-parser-js'
 import ManualProfiler from '../ManualProfiler'
 import dataset from './education_costs.json'
-import { TableEmotion } from './TableEmotion'
 import { TableReactNative } from './TableReactNative'
-import { TableStyledComponents } from './TableStyledComponents'
-import { TableTamagui } from './TableTamagui'
-import { TableUnistyles } from './TableUnistyles'
-import { TableWeb } from './TableWeb'
+import { tableVariants } from './tableVariants'
 import { eduColumns } from './utils'
 
 const RUNS_PER_TABLE = 30;
@@ -32,20 +30,6 @@ const getEnvironmentInfo = () => {
 };
 
 
-const nativeTableVariants = {
-  'react-native': TableReactNative,
-  tamagui: TableTamagui,
-  unistyles: TableUnistyles,
-  emotion: TableEmotion,
-  'styled-components': TableStyledComponents,
-}
-
-const webTableVariants = {
-  web: TableWeb,
-  ...nativeTableVariants,
-}
-
-const tableVariants = Platform.OS === 'web' ? webTableVariants : nativeTableVariants
 
 const baseVariant = 'react-native'
 
@@ -55,18 +39,22 @@ export const TableBenchmark = () => {
  
 
   return (
-    <StyledProvider theme={lightTheme}>
-      <ThemeProvider theme={lightTheme}>
-        <TamaguiProvider config={config}>
-          <SafeAreaView style={{ flex: 1}}>
-            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexDirection: 'column', gap: 10 }}>
-              <MultiRunBenchmark />
-              <SingleRunBenchmark />
-            </ScrollView>
-          </SafeAreaView>
-        </TamaguiProvider>
-      </ThemeProvider>
-    </StyledProvider>
+    <SharedValue.Provider value={lightTheme}>
+      <StyledProviderWeb theme={lightTheme}>
+        <StyledProvider theme={lightTheme}>
+          <ThemeProvider theme={lightTheme}>
+            <TamaguiProvider config={config}>
+              <SafeAreaView style={{ flex: 1}}>
+                <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexDirection: 'column', gap: 10 }}>
+                  <MultiRunBenchmark />
+                  <SingleRunBenchmark />
+                </ScrollView>
+              </SafeAreaView>
+            </TamaguiProvider>
+          </ThemeProvider>
+        </StyledProvider>
+      </StyledProviderWeb>
+    </SharedValue.Provider>
   )
 }
 
@@ -289,14 +277,14 @@ const MarkdownTable = ({ avgMsById, description = '' }: { avgMsById: Record<stri
   const markdownText = Object.entries(avgMsById)
     .map(([id, avgMs]) => {
       const relative = Math.round(100 * avgMs / baseTime);
-      return `| ${padStr(id, 20)} | ${padStr(avgMs.toFixed(2), 15)} | ${padStr(`${relative}%`, 15)} |`;
+      return `| ${padStr(id, 24)} | ${padStr(avgMs.toFixed(2), 15)} | ${padStr(`${relative}%`, 15)} |`;
     })
     .join('\n');
 
   const environmentInfo = getEnvironmentInfo();
   const fullMarkdownText = `${environmentInfo}\n${description}\n\n`
-  + `| ${padStr('Variant', 20)} | ${padStr('Avg (ms)', 15)} | ${padStr('Relative to RN', 15)} |\n`
-  + `|${padStr('', 22, '-')}|${padStr('', 17, '-')}|${padStr('', 17, '-')}|\n` + markdownText;
+  + `| ${padStr('Variant', 24)} | ${padStr('Avg (ms)', 15)} | ${padStr('Relative to RN', 15)} |\n`
+  + `|${padStr('', 26, '-')}|${padStr('', 17, '-')}|${padStr('', 17, '-')}|\n` + markdownText;
 
   return (
     <View style={styles.container}>

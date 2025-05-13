@@ -1,4 +1,4 @@
-import styled from 'styled-components/native'
+import styled from '@emotion/styled'
 
 import {
   createColumnHelper,
@@ -7,7 +7,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useState } from 'react'
-import { View } from 'react-native'
 import { costColumns, EducationCost, eduColumns } from './utils'
 
 const columnHelper = createColumnHelper<EducationCost>()
@@ -23,7 +22,7 @@ const columns = eduColumns.map((col) =>
   })
 )
 
-export function TableStyledComponents({ dataset }: { dataset: EducationCost[] }) {
+export function TableEmotionWeb({ dataset }: { dataset: EducationCost[] }) {
   const [data, _setData] = useState(dataset)
 
   const table = useReactTable({
@@ -34,7 +33,7 @@ export function TableStyledComponents({ dataset }: { dataset: EducationCost[] })
 
   return (
     <Table>
-      <View>
+      <div>
         {table.getHeaderGroups().map((headerGroup) => (
           <Row key={headerGroup.id} gray>
             {headerGroup.headers.map((header) => (
@@ -49,8 +48,8 @@ export function TableStyledComponents({ dataset }: { dataset: EducationCost[] })
             ))}
           </Row>
         ))}
-      </View>
-      <View>
+      </div>
+      <div>
         {table.getRowModel().rows.map((row, idx) => {
           return (
             <Row key={row.id} gray={idx % 2 === 1}>
@@ -62,12 +61,12 @@ export function TableStyledComponents({ dataset }: { dataset: EducationCost[] })
             </Row>
           )
         })}
-      </View>
+      </div>
     </Table>
   )
 }
 
-const Table = styled.View`
+const Table = styled.div`
   border-radius: ${({ theme }) => String(theme.radii.$2_5)}px;
   border-width: 1px;
   overflow: hidden;
@@ -75,21 +74,26 @@ const Table = styled.View`
 `
 Table.displayName = 'Table'
 
-const Row = styled.View<{ gray: boolean }>`
+const Row = styled.div<{ gray: boolean }>`
   display: flex;
   flex-direction: row;
   padding: ${({ theme }) => `${theme.space.rowPadding}px`};
   
   background-color: ${(props) => (props.gray ? props.theme.colors.grayBg : 'unset')};
+  cursor: pointer;
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.grayBgHover};
+    color: #fff;
+  }
 `
 Row.displayName = 'Row'
 
-const Cell = styled.View({
+const Cell = styled.div({
   flex: 1,
   flexBasis: 0,
 })
 
-const CellValue = styled.Text<{
+const CellValue = styled.div<{
   valueType?: 'cost'
 }>`
   ${props => props.valueType === 'cost' ?

@@ -56,4 +56,9 @@ console.log('bundler paths', {
 //   path.resolve(monorepoRoot, 'node_modules'),
 // ];
 
+// 1. Enable Metro support for symlinks and package exports
+config.resolver.unstable_enablePackageExports = true;
+// 2. Only for npm monorepos: force Metro to resolve (sub)dependencies only from the `nodeModulesPaths`
+// config.resolver.disableHierarchicalLookup = true;
+
 module.exports = config
